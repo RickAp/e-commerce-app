@@ -1,10 +1,15 @@
 import React from 'react';
 import '../src/globals.css';
+import { wrapper } from '@/store/store';
+import { Toaster } from "react-hot-toast"
 
 function MyApp({ Component, pageProps}) {
     return (
-        <Component {...pageProps} /> 
+        <div>
+            <Component {...pageProps} />
+            <Toaster />
+        </div>
     );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
