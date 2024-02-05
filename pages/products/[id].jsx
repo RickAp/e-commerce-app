@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import NavbarCar from '@/components/NavBarCar/NavBarCar';
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
@@ -22,11 +23,26 @@ const ProductDetails = () => {
     }
   }, [id]);
 
-  if (!product) return <div>Cargando...</div>;
+  const addToCart = (product) => {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const existingItem = cartItems.find(item => item.id === product.id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cartItems.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  };
+
+  if (!product) return <div>Loading...</div>;
 
   return (
+    
     <div className="flex justify-center my-8">
-      <div className="bg-white shadow-lg rounded-lg md:max-w-2xl lg:max-w-4xl mx-4">
+      <NavbarCar />
+      <div className="bg-white shadow-lg rounded-lg md:max-w-2xl lg:max-w-4xl mx-4 mt-24">
         <div className="md:flex">
           <div className="md:flex-shrink-0">
             <img className="rounded-lg md:w-56 object-cover object-center" src={product.image} alt={product.title} />
@@ -40,7 +56,10 @@ const ProductDetails = () => {
             <div className="mt-4 mb-2">
               <span className="text-xl font-bold">${product.price}</span>
             </div>
-            <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button 
+              className="mt-4 bg-blue-500 hover:bg-blue-700 duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+              onClick={() => addToCart(product)}
+            >
               Añadir al carrito
             </button>
           </div>
