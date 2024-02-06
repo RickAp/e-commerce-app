@@ -2,9 +2,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavbarCar from '@/components/NavBarCar/NavBarCar';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
+  const [randomProducts, setRandomProducts] = useState([]);
   const router = useRouter();
   const { id } = router.query;
 
@@ -21,6 +24,18 @@ const ProductDetails = () => {
 
       fetchProduct();
     }
+
+    const fetchRandomProducts = async () => {
+      try {
+        const response = await axios.get(`https://fakestoreapi.com/products`);
+        const shuffled = response.data.sort(() => 0.5 - Math.random());
+        setRandomProducts(shuffled.slice(0, 3)); 
+      } catch (error) {
+        console.error('Error fetching random products:', error);
+      }
+    };
+
+    fetchRandomProducts();
   }, [id]);
 
   const addToCart = (product) => {
@@ -40,7 +55,7 @@ const ProductDetails = () => {
 
   return (
     
-    <div className="flex justify-center my-8">
+    <div className="flex flex-col items-center my-8">
       <NavbarCar />
       <div className="bg-white shadow-lg rounded-lg md:max-w-2xl lg:max-w-4xl mx-4 mt-24">
         <div className="md:flex">
@@ -64,6 +79,22 @@ const ProductDetails = () => {
             </button>
           </div>
         </div>
+      </div>
+
+      <div className="w-full max-w-[400px] mx-auto mt-10 ">
+        <h2 className="text-2xl font-semibold my-5 text-center">Artículos Más Populares</h2>
+        <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} className="mx-auto">
+          {randomProducts.map((item) => (
+            <div key={item.id} className="flex justify-center">
+              <img src={item.image} alt={item.title} className="mx-auto h-[400px]" />
+              <div className="mt-11 text-center">
+                <h3 className="text-lg">{item.title}</h3>
+                <p className="text-gray-600">{item.category}</p>
+                <p className="text-xl font-bold">${item.price}</p>
+              </div>
+            </div>
+          ))}
+        </Carousel>
       </div>
     </div>
   );
