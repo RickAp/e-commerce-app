@@ -41,18 +41,17 @@ const Navbar = ({ onSearch, onSort }) => {
   return (
     <nav className="bg-white border-b border-gray-200 fixed w-full z-10 top-0">
       <div className="container mx-auto px-4 lg:px-8 flex justify-between items-center h-16">
-        <Link href="/">
-          <img src='/logo.jpg' alt="Logo" className="h-12 w-12 hidden lg:flex" />
-        </Link>
-        <div className="lg:hidden start-0.5">
+        <div className="flex lg:hidden z-20">
           <button onClick={() => setIsOpen(!isOpen)}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
           </button>
         </div>
-
-        <div className={`lg:flex ${isOpen ? 'flex mt-60 space-y-4 ' : 'hidden'} flex-col lg:flex-row lg:items-center`}>
+        <Link href="/">
+          <img src='/logo.jpg' alt="Logo" className="h-12 w-12 hidden lg:flex" />
+        </Link>
+        <div className={`${isOpen ? "fixed inset-0 bg-white z-10 flex flex-col items-center space-y-4 pt-20 lg:hidden" : "hidden lg:flex flex-col lg:flex-row lg:items-center"} `}>
           <form onSubmit={handleSubmitSearch} className="flex items-center mr-5">
             <input
               type="text"
@@ -87,8 +86,7 @@ const Navbar = ({ onSearch, onSort }) => {
             Añadir Producto
           </button>
         </div>
-
-        <div className='relative'>
+        <div className='relative z-20'>
           <Link href="/cart">
             <img src='/car.jpg' alt="Carrito" className="h-8 w-8 lg:h-10 lg:w-10 mr-3" />
           </Link>
